@@ -90,7 +90,7 @@ void Chest::CreateChest()
             
             else if (i == 0)
             {
-                if (x == 0 || x == 7) {
+                if (x == 7) {
                     Piece tower;
                     tower.Move = MoveTower;
                     tower.team = 'D';
@@ -198,7 +198,16 @@ void Chest::CreateChest()
             }
         }
     }
-    this->chest[0][0].team = 'D';
+    Piece tower;
+    tower.Move = MoveTower;
+    tower.team = 'D';
+    tower.type_name = 'T';
+    tower.position[0] = 0;
+    tower.position[1] = 0;
+    tower.pos_team_array = black_team_pos;
+    this->black_team[black_team_pos] = tower;
+    black_team_pos++;
+    this->chest[0][0] = tower;
 }
 bool Chest::insertValue(Piece piece, int position[2], bool continue_game)
 {
@@ -208,29 +217,11 @@ bool Chest::insertValue(Piece piece, int position[2], bool continue_game)
     if (piece_can_move_to_place == false) {
         return false;
     }
-
     if (this->chest[position[0]][position[1]].team != piece.team)
     {
-        if (this->chest[piece.position[0]][piece.position[1]].type_name == 'K')
+        if (this->chest[piece.position[0]][piece.position[1]].type_name == 'K' && continue_game)
         {
             continue_game = false;
-        }
-        if (this->chest[piece.position[0]][piece.position[1]].team == 'W')
-        {
-                this->white_team[this->chest[piece.position[0]][piece.position[1]].pos_team_array].team = 'X';
-                this->white_team[this->chest[piece.position[0]][piece.position[1]].pos_team_array].type_name = 'X';
-                this->white_team[this->chest[piece.position[0]][piece.position[1]].pos_team_array].position[0] = 'X';
-                this->white_team[piece.pos_team_array].position[0] = position[0];
-                this->white_team[piece.pos_team_array].position[1] = position[1];                    
-
-        }
-        else if (this->chest[piece.position[0]][piece.position[1]].team == 'D')
-        {
-            this->black_team[this->chest[piece.position[0]][piece.position[1]].pos_team_array].team = 'X';
-            this->black_team[this->chest[piece.position[0]][piece.position[1]].pos_team_array].type_name = 'X';
-            this->black_team[this->chest[piece.position[0]][piece.position[1]].pos_team_array].position[0] = 'X';
-            this->black_team[piece.pos_team_array].position[0] = position[0];
-            this->black_team[piece.pos_team_array].position[1] = position[1];        
         }
         this->chest[piece.position[0]][piece.position[1]].team = 'X';
         this->chest[piece.position[0]][piece.position[1]].type_name = 'X';
@@ -254,23 +245,6 @@ bool Chest::insertValue(Piece piece, int position[2], bool continue_game)
     
     else
     {
-        if (this->chest[piece.position[0]][piece.position[1]].team == 'W')
-        {
-                this->white_team[this->chest[piece.position[0]][piece.position[1]].pos_team_array].team = 'X';
-                this->white_team[this->chest[piece.position[0]][piece.position[1]].pos_team_array].type_name = 'X';
-                this->white_team[this->chest[piece.position[0]][piece.position[1]].pos_team_array].position[0] = 'X';
-                this->white_team[piece.pos_team_array].position[0] = position[0];
-                this->white_team[piece.pos_team_array].position[1] = position[1];                    
-
-        }
-        else if (this->chest[piece.position[0]][piece.position[1]].team == 'D')
-        {
-            this->black_team[this->chest[piece.position[0]][piece.position[1]].pos_team_array].team = 'X';
-            this->black_team[this->chest[piece.position[0]][piece.position[1]].pos_team_array].type_name = 'X';
-            this->black_team[this->chest[piece.position[0]][piece.position[1]].pos_team_array].position[0] = 'X';
-            this->black_team[piece.pos_team_array].position[0] = position[0];
-            this->black_team[piece.pos_team_array].position[1] = position[1];        
-        }
         this->chest[piece.position[0]][piece.position[1]].team = 'X';
         this->chest[piece.position[0]][piece.position[1]].type_name = 'X';
         this->chest[piece.position[0]][piece.position[1]].position[0] = -1;
@@ -326,7 +300,6 @@ void Chest::printChest()
     cout << "      a    b    c    d    e    f    g    h    \n";
 } 
 
-
 bool MoveKnight(Chest chest, Piece knight, int position[2]){ 
     if (knight.team == 'D') {
         if (position[0] == knight.position[0] + 2 && position[1] == knight.position[1] && knight.position[0] == 1)
@@ -358,6 +331,7 @@ bool MoveKnight(Chest chest, Piece knight, int position[2]){
         }
         return false;
     }
+    return false;
     
 }
 bool MoveQueen(Chest chest, Piece queen, int position[2]){
@@ -473,6 +447,10 @@ bool MoveQueen(Chest chest, Piece queen, int position[2]){
 bool MoveKing(Chest chest, Piece king, int position[2]){
     int king_x = king.position[1];
     int king_y = king.position[0];
+    if (chest.chest[0][0].position[0] == 0)
+    {
+
+    }
     if (king_x + 1 == position[1] && king_y == position[0]) {
         return true;
     }
@@ -629,6 +607,10 @@ bool MoveTower(Chest chest, Piece tower, int position[2]){
 bool MoveHorse(Chest chest, Piece horse, int position[2]){
     int horse_x = horse.position[1];
     int horse_y = horse.position[0];
+    if (chest.chest[0][0].position[0] == 0)
+    {
+        
+    }
     if (horse_x + 2 == position[1] && horse_y + 1 == position[0]) {
         return true;
     }

@@ -3,6 +3,7 @@
 #include "io.h"
 #include "main.h"
 #include "chess.h"
+#include <fstream>
 
 using namespace std;
 
@@ -32,7 +33,8 @@ bool getMove(int actual_position_player[2], int next_position_player[2]){
     string pos0 = "";
     string pos1 = "";
     short int pos = 0;
-    for(int i = 0; i < position_player_str.length(); i++)
+    int len_pos = position_player_str.length();
+    for(int i = 0; i < len_pos; i++)
     {
         if (position_player_str[i] == ' ') {
             pos += 1;
@@ -50,6 +52,33 @@ bool getMove(int actual_position_player[2], int next_position_player[2]){
     bool value_position1 = parsePosition(pos1, next_position_player);
     if (value_position1 == false || value_position0 == false) {
         cout << "Ingreso una posición no valida, intentelo denuevo \n";
+        return false;
+    }
+    return true;
+}
+bool getFileMove(string position_player_str, int line_number, int actual_position_player[2], int next_position_player[2]){
+    string pos0 = "";
+    string pos1 = "";
+    short int pos = 0;
+    int len_pos = position_player_str.length();
+    for(int i = 0; i < len_pos; i++)
+    {
+        if (position_player_str[i] == ' ') {
+            pos += 1;
+            continue;
+        }   
+        if (pos == 0) {
+            pos0 += position_player_str[i];
+        }
+        else if (pos == 1)
+        {
+            pos1 += position_player_str[i];
+        }
+    }
+    bool value_position0 = parsePosition(pos0, actual_position_player);
+    bool value_position1 = parsePosition(pos1, next_position_player);
+    if (value_position1 == false || value_position0 == false) {
+        cout << "En la linea " << line_number << " fallo una jugada\n";
         return false;
     }
     return true;
@@ -126,5 +155,67 @@ void Console2Players(){
             }
         }
         chest.printChest();
+    }
+}
+
+void GameReadingFile(){
+    Chest chest;
+    chest.CreateChest();
+    chest.printChest();
+    ifstream file;
+    file.open("jugadas.txt");
+    string jugada;
+    long int file_line = 1;
+    bool continue_game = true;
+    int actual_position_player_1[2];
+    int next_position_player_1[2];
+    int actual_position_player_2[2];
+    int next_position_player_2[2];
+    while(!file.eof() && continue_game)
+    {
+        getline(file, jugada);
+        file_line += 1;
+        cout << "Jugada " << jugada << "\n";
+        bool value_position = getFileMove(jugada, file_line, actual_position_player_1, next_position_player_1);
+        if (value_position == false) {
+            continue;
+        }
+        else {
+            if (chest.chest[actual_position_player_1[0]][actual_position_player_1[1]].team == 'D')
+            {
+                cout << "No puedes mover la pieza de tu rival!\n";
+                continue;
+            }
+            chest.insertValue(chest.chest[actual_position_player_1[0]][actual_position_player_1[1]], next_position_player_1, continue_game);
+            if (continue_game == false)
+            {
+                cout << "El jugador blanco a ganado!\n";
+                break;
+            }
+        }
+        chest.printChest();
+        if (!file.eof() && continue_game) {
+            getline(file, jugada);
+            cout << "Jugada " << jugada << "\n";
+            file_line += 1; 
+            bool value_position = getFileMove(jugada, file_line, actual_position_player_2, next_position_player_2);
+            if (value_position == false) {
+                continue;
+            }
+            else {
+                if (chest.chest[actual_position_player_2[0]][actual_position_player_2[1]].team == 'W')
+                {
+                    cout << "No puedes mover la pieza de tu rival!\n";
+                    continue;
+                }
+                chest.insertValue(chest.chest[actual_position_player_2[0]][actual_position_player_2[1]], next_position_player_2, continue_game);
+                if (continue_game == false)
+                {
+                    cout << "El jugador negro a ganado!\n";
+                    break;
+                }
+            }
+            chest.printChest();
+        } 
     }
 }
