@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>
+#include <string.h>
 #include "main.h"
 #include "chess.h"
 #include "io.h"
@@ -10,9 +10,12 @@ int main(int argc, char const *argv[]){
     {
         Console2Players();
     }
-    else if (argc > 1)
+    else if (argc > 1 && strcmp(argv[1], "-t") == 0)
     {
         GameReadingFile(argv[2]);
+    }
+    else{
+        cout << "Revisa los flags porfavor!\n";
     }
     
 }

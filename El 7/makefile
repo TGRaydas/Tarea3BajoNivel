@@ -15,5 +15,5 @@ io.o: io.cpp
 
 clean:
 	rm *.o
-	rm Tarea3
+	rm Tarea3.out
 
