@@ -6,5 +6,13 @@
 using namespace std;
 
 int main(int argc, char const *argv[]){
-    GameReadingFile();
+    if (argc == 1)
+    {
+        Console2Players();
+    }
+    else if (argc > 1)
+    {
+        GameReadingFile(argv[2]);
+    }
+    
 }

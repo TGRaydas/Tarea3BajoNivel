@@ -158,12 +158,12 @@ void Console2Players(){
     }
 }
 
-void GameReadingFile(){
+void GameReadingFile(const char *name_file){
     Chest chest;
     chest.CreateChest();
     chest.printChest();
     ifstream file;
-    file.open("jugadas.txt");
+    file.open(name_file);
     string jugada;
     long int file_line = 1;
     bool continue_game = true;
