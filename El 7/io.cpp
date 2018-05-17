@@ -218,4 +218,59 @@ void GameReadingFile(const char *name_file){
             chest.printChest();
         } 
     }
+    if (continue_game) {
+        cout << "El juego no a acabado, porfavor continue jugando\n";
+        while (true){
+            cout << "Ingrese la jugada del blanco: ";  
+            bool value_position = getMove(actual_position_player_1, next_position_player_1);
+            if (value_position == false) {
+                continue;
+            }
+            else
+            {
+                if (chest.chest[actual_position_player_1[0]][actual_position_player_1[1]].team == 'D')
+                {
+                    cout << "No puedes mover la pieza de tu rival!\n";
+                    continue;
+                }
+                bool can_insert = chest.insertValue(chest.chest[actual_position_player_1[0]][actual_position_player_1[1]], next_position_player_1, continue_game);
+                if (continue_game == false)
+                {
+                    cout << "El jugador blanco a ganado!\n";
+                    break;
+                }
+                if (can_insert == false) {
+                    continue;
+                }
+                break;
+            }
+        }
+        chest.printChest();
+        while (true){
+            cout << "Ingrese la jugada del negro: ";  
+            bool value_position = getMove(actual_position_player_2, next_position_player_2);
+            if (value_position == false) {
+                continue;
+            }
+            else
+            {
+                if (chest.chest[actual_position_player_2[0]][actual_position_player_2[1]].team == 'W')
+                {
+                    cout << "No puedes mover la pieza de tu rival!\n";
+                    continue;
+                }
+                bool can_insert = chest.insertValue(chest.chest[actual_position_player_2[0]][actual_position_player_2[1]], next_position_player_2, continue_game);
+                if (continue_game == false)
+                {
+                    cout << "El jugador negro a ganado!\n";
+                    break;
+                }
+                if (can_insert == false) {
+                    continue;
+                }
+                break;
+            }
+        }
+        chest.printChest();   
+    }
 }
