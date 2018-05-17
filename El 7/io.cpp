@@ -77,7 +77,7 @@ bool getFileMove(string position_player_str, int line_number, int actual_positio
     }
     bool value_position0 = parsePosition(pos0, actual_position_player);
     bool value_position1 = parsePosition(pos1, next_position_player);
-    if (value_position1 == false || value_position0 == false) {
+    if (value_position1 == false || value_position0 == false || (next_position_player[0] == actual_position_player[0] && next_position_player[1] == actual_position_player[1])) {
         cout << "En la linea " << line_number << " fallo una jugada\n";
         return false;
     }
@@ -164,6 +164,13 @@ void GameReadingFile(const char *name_file){
     chest.printChest();
     ifstream file;
     file.open(name_file);
+    while(!file.is_open())
+    {
+        string name;
+        cout << "No se pudo abrir el archivo, porfavor ingrese el nombre del archivo. \n";
+        getline(cin, name);
+        file.open(name.c_str());
+    }
     string jugada;
     long int file_line = 1;
     bool continue_game = true;
